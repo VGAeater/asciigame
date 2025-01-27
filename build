@@ -1,1 +1,12 @@
-gcc -o run main.c term.c engine.c drawing.c
+#!/bin/sh
+
+mkdir out
+
+rm -r out/*
+
+mkdir out/assets
+cp assets/* out/assets/
+
+cd src
+
+gcc -o ../out/run *.c

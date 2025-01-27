@@ -54,7 +54,7 @@ void resize() {
 }
 
 int main() {
-	FILE* test_file = fopen( "menu.txt", "r" );
+	FILE* test_file = fopen( "assets/menu.txt", "r" );
 	Image test_image = d_load_image( test_file );
 	fclose( test_file );
 
