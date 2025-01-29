@@ -6,7 +6,7 @@ brightness = []
 
 from PIL import Image
 
-im = Image.open( "imagecrop.png" )
+im = Image.open( "images/imagecrop.png" )
 
 print( im.format, im.size, im.mode )
 
