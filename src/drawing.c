@@ -39,22 +39,8 @@ void d_rect( int y, int x, int height, int width ) {
 	d_str( y + height - 1, x + width - 1, DL_LR );
 }
 
-void d_free_image( Image image ) {
-	for ( int i = 0; i < image.height; i++ ) {
-		free( image.data[i] );
-	}
-	free( image.data );
-}
-
-Image d_load_image( FILE* fptr ) {
-	Image image;
-
+int d_load_frame( FILE* fptr, char** frame ) {
 	char* buffer = calloc( MAX_BUFFER, sizeof( char ) );
-
-	fscanf( fptr, "%d\n", &image.width );
-	fscanf( fptr, "%d\n", &image.height );
-
-	image.data = calloc( image.height, sizeof( char* ) );
 
 	for ( int y = 0; y < image.height; y++ ) {
 		int ch;
@@ -62,14 +48,9 @@ Image d_load_image( FILE* fptr ) {
 
 		while ( ( ch = getc( fptr ) ) != '\n' ) {
 			if ( ch == EOF || i == MAX_BUFFER ) {
-				d_free_image( image );
-
-				image.width = -1;
-				image.height = -1;
-
 				free( buffer );
 
-				return image;
+				return -1;
 			}
 
 			buffer[i] = ch;
@@ -77,13 +58,75 @@ Image d_load_image( FILE* fptr ) {
 			i++;
 		}
 
-		image.data[y] = calloc( i, sizeof( char ) );
-		memcpy( image.data[y], buffer, ( i - 1 ) * sizeof( char ) );
+		frame[y] = calloc( i, sizeof( char ) );
+		memcpy( frame[y], buffer, ( i - 1 ) * sizeof( char ) );
 		image.data[y][i] = '\0';
 	}
 
 	free( buffer );
 
+	return 0;
+}
+
+void d_free_frame( char** frame, int height ) {
+	for ( int i = 0; i < height; i++ ) {
+		free( frame );
+	}
+	free( frame );
+}
+
+void d_free_image( Image image ) {
+	d_free_frame( image.data, image.height );
+}
+
+void d_free_video( Video video ) {
+	for ( int i = 0; i < video.frames; i++ ) {
+		d_free_frame( video.data[i], video.height );
+	}
+	free( video.data );
+}
+
+Image d_load_image( FILE* fptr ) {
+	Image image;
+
+	fscanf( fptr, "%d\n", &image.width );
+	fscanf( fptr, "%d\n", &image.height );
+
+	image.data = calloc( image.height, sizeof( char* ) );
+
+	if ( d_load_frame( image.data ) != 0 ) {
+		d_free_image( image );
+
+		image.width = -1;
+		image.height = -1;
+	}
+
 	return image;
+}
+
+Video d_load_video( FILE* fptr ) {
+	Video video;
+
+	fscanf( fptr, "%d\n", &video.width );
+	fscanf( fptr, "%d\n", &video.height );
+	fscanf( fptr, "%d\n", &video.frames );
+	fscanf( fptr, "%d\n", &video.fps );
+
+	video.data = calloc( video.frames, sizeof( char** ) );
+
+	for ( int i = 0; i < video.frames; i++ ) {
+		video.data = calloc( video.height, sizeof( char* ) );
+
+		if ( d_load_frame( video.data[i] ) != 0 ) {
+			d_free_video( video );
+
+			video.width = -1;
+			video.height = -1;
+
+			break;
+		}
+	}
+
+	return video;
 }
 

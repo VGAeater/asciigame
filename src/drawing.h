@@ -34,6 +34,14 @@ typedef struct {
 	char** data;
 } Image;
 
+typedef struct {
+	int width;	/* not limit of data[0] width simply symbolic */
+	int height;
+	int frames;
+	int fps;
+	char*** data;
+} Video;
+
 void d_hline( int y, int x, char* str, int length );
 
 void d_vline( int y, int x, char* str, int length );
@@ -42,7 +50,13 @@ void d_str( int y, int x, char* str );
 
 void d_rect( int y, int x, int height, int width );
 
+void d_free_image( Image image );
+
+void d_free_video( Video video );
+
 Image d_load_image( FILE* fptr );
+
+Image d_load_video( FILE* fptr );
 
 #endif
 

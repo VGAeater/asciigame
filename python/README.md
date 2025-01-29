@@ -21,6 +21,7 @@ width isnt used by the program but its nice to know
 9[width]
 4[height]
 2[frames]
+12[fps]
 _________
 | ascii |
 | frame |

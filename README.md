@@ -1,5 +1,19 @@
 ## drawing.h
 `
+typedef struct {
+	int width;	/* not limit of data[0] width simply symbolic */
+	int height;
+	char** data;
+} Image;
+
+typedef struct {
+	int width;	/* not limit of data[0] width simply symbolic */
+	int height;
+	int frames;
+	int fps;
+	char*** data;
+} Image;
+
 void d_hline( int y, int x, char* str, int length );
 
 void d_vline( int y, int x, char* str, int length );

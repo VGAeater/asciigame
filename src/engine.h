@@ -1,5 +1,3 @@
-#include <stdbool.h>
-
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
