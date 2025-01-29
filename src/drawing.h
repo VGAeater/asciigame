@@ -56,7 +56,7 @@ void d_free_video( Video video );
 
 Image d_load_image( FILE* fptr );
 
-Image d_load_video( FILE* fptr );
+Video d_load_video( FILE* fptr );
 
 #endif
 

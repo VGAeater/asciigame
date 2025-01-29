@@ -39,10 +39,10 @@ void d_rect( int y, int x, int height, int width ) {
 	d_str( y + height - 1, x + width - 1, DL_LR );
 }
 
-int d_load_frame( FILE* fptr, char** frame ) {
+int d_load_frame( FILE* fptr, char** frame, int height ) {
 	char* buffer = calloc( MAX_BUFFER, sizeof( char ) );
 
-	for ( int y = 0; y < image.height; y++ ) {
+	for ( int y = 0; y < height; y++ ) {
 		int ch;
 		int i = 0;
 
@@ -60,7 +60,7 @@ int d_load_frame( FILE* fptr, char** frame ) {
 
 		frame[y] = calloc( i, sizeof( char ) );
 		memcpy( frame[y], buffer, ( i - 1 ) * sizeof( char ) );
-		image.data[y][i] = '\0';
+		frame[y][i] = '\0';
 	}
 
 	free( buffer );
@@ -94,7 +94,7 @@ Image d_load_image( FILE* fptr ) {
 
 	image.data = calloc( image.height, sizeof( char* ) );
 
-	if ( d_load_frame( image.data ) != 0 ) {
+	if ( d_load_frame( fptr, image.data, image.height ) != 0 ) {
 		d_free_image( image );
 
 		image.width = -1;
@@ -117,7 +117,7 @@ Video d_load_video( FILE* fptr ) {
 	for ( int i = 0; i < video.frames; i++ ) {
 		video.data = calloc( video.height, sizeof( char* ) );
 
-		if ( d_load_frame( video.data[i] ) != 0 ) {
+		if ( d_load_frame( fptr, video.data[i], video.height ) != 0 ) {
 			d_free_video( video );
 
 			video.width = -1;

@@ -50,7 +50,7 @@ double e_delta() {
 }
 
 void* input_thread_function( void* args ) {
-	while ( true ) {
+	while ( 1 ) {
 		int ch = getchar();
 
 		if ( e_keyboard_handler != NULL ) {
