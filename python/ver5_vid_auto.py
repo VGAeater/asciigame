@@ -59,16 +59,6 @@ colors = (
     ( np.array( [ 255, 255, 255 ] ), 97, 107, "Bright White" )
 )
 
-from PIL import Image
-
-im = Image.open( "images/amideadyet.webp" )
-#im = Image.open( "images/sneasel.webp" )
-#im = Image.open( "boykisser.png" )
-#im = Image.open( "lol.jpg" )
-#im = Image.open( "eye.png" )
-
-pixels = im.load()
-
 def approximate_color( c ):
     if len( c ) > 3 and c[3] < 128:
         return 0
@@ -124,47 +114,58 @@ def approximate_color( c ):
     return best
 
 
-ratio = 0.5 * ( im.height / im.width )
+from PIL import Image
 
-text_width = 192
-#text_width = 48
+text_width = 96
+
+def gen_frame( frame ):
+    im = Image.open( "video_test/frame{0:04d}.png".format( frame ) )
+    
+    pixels = im.load()
+    
+    ratio = 0.5 * ( im.height / im.width )
+    
+    x_step = im.size[0] / text_width
+    y_step = im.size[1] / ( text_width * ratio )
+    
+    for i in range( math.floor( text_width * ratio ) ):
+        curr_fore = -1
+        curr_back = -1
+    
+        right = 0
+        for j in range( text_width ):
+            data = approximate_color( pixels[j * x_step + x_step / 2, i * y_step + y_step / 2] )
+            if data == 0:
+                right += 1
+                continue
+            elif not right == 0:
+                print( "\033[" + str( right ) + "C", end="" )
+                right = 0
+            char = chars[ data[3] ]
+            if char == "█":
+                if not data[1][1] == curr_fore:
+                    curr_fore = data[1][1]
+                    print( "\033[" + str( curr_fore ) + "m", end="" )
+                print( "█", end="" )
+            else:
+                if not data[1][1] == curr_fore:
+                    curr_fore = data[1][1]
+                    if not data[2][2] == curr_back:
+                        curr_back = data[2][2]
+                        print( "\033[" + str( curr_fore ) + ";" + str( curr_back ) + "m", end="" )
+                    else:
+                        print( "\033[" + str( curr_fore ) + "m", end="" )
+                elif not data[2][2] == curr_back:
+                    curr_back = data[2][2]
+                    print( "\033[" + str( curr_back ) + "m", end="" )
+                print( char, end="" )
+        print()
 
 print( text_width )
-print( math.floor( text_width * ratio ) )
+print( 32 )
+print( 39 )
+print( 12 )
 
-x_step = im.size[0] / text_width
-y_step = im.size[1] / ( text_width * ratio )
+for i in range( 39 ):
+    gen_frame( i )
 
-for i in range( math.floor( text_width * ratio ) ):
-    curr_fore = -1
-    curr_back = -1
-
-    right = 0
-    for j in range( text_width ):
-        data = approximate_color( pixels[j * x_step + x_step / 2, i * y_step + y_step / 2] )
-        if data == 0:
-            right += 1
-            continue
-        elif not right == 0:
-            print( "\033[" + str( right ) + "C", end="" )
-            right = 0
-        char = chars[ data[3] ]
-        if char == "█":
-            if not data[1][1] == curr_fore:
-                curr_fore = data[1][1]
-                print( "\033[" + str( curr_fore ) + "m", end="" )
-            print( "█", end="" )
-        else:
-            if not data[1][1] == curr_fore:
-                curr_fore = data[1][1]
-                if not data[2][2] == curr_back:
-                    curr_back = data[2][2]
-                    print( "\033[" + str( curr_fore ) + ";" + str( curr_back ) + "m", end="" )
-                else:
-                    print( "\033[" + str( curr_fore ) + "m", end="" )
-            elif not data[2][2] == curr_back:
-                curr_back = data[2][2]
-                print( "\033[" + str( curr_back ) + "m", end="" )
-            print( char, end="" )
-    print()
-print( "\033[0m" )
