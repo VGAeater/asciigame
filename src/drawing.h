@@ -35,7 +35,7 @@ typedef struct {
 } Image;
 
 typedef struct {
-	int width;	/* not limit of data[0] width simply symbolic */
+	int width;	/* not limit of data[0][0] width simply symbolic */
 	int height;
 	int frames;
 	int fps;
@@ -57,6 +57,10 @@ void d_free_video( Video video );
 Image d_load_image( FILE* fptr );
 
 Video d_load_video( FILE* fptr );
+
+void d_draw_image( Image image, int y, int x );
+
+void d_draw_video( Video video, int y, int x, int frame );
 
 #endif
 

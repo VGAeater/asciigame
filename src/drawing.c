@@ -58,8 +58,8 @@ int d_load_frame( FILE* fptr, char** frame, int height ) {
 			i++;
 		}
 
-		frame[y] = calloc( i, sizeof( char ) );
-		memcpy( frame[y], buffer, ( i - 1 ) * sizeof( char ) );
+		frame[y] = calloc( i + 1, sizeof( char ) );
+		memcpy( frame[y], buffer, i * sizeof( char ) );
 		frame[y][i] = '\0';
 	}
 
@@ -97,7 +97,6 @@ Image d_load_image( FILE* fptr ) {
 	if ( d_load_frame( fptr, image.data, image.height ) != 0 ) {
 		d_free_image( image );
 
-		image.width = -1;
 		image.height = -1;
 	}
 
@@ -115,12 +114,11 @@ Video d_load_video( FILE* fptr ) {
 	video.data = calloc( video.frames, sizeof( char** ) );
 
 	for ( int i = 0; i < video.frames; i++ ) {
-		video.data = calloc( video.height, sizeof( char* ) );
+		video.data[i] = calloc( video.height, sizeof( char* ) );
 
 		if ( d_load_frame( fptr, video.data[i], video.height ) != 0 ) {
 			d_free_video( video );
 
-			video.width = -1;
 			video.height = -1;
 
 			break;
@@ -128,5 +126,24 @@ Video d_load_video( FILE* fptr ) {
 	}
 
 	return video;
+}
+
+void d_draw_image( Image image, int y, int x ) {
+	for ( int i = 0; i < image.height; i++ ) {
+		MOVE( y + i, x );
+		fputs( image.data[i], stdout );
+	}
+	DEFAULT();
+}
+
+void d_draw_video( Video video, int y, int x, int frame ) {
+	for ( int i = 0; i < video.height; i++ ) {
+		MOVE( y + i, x );
+		fputs( video.data[frame][i], stdout );
+		FILE* fptr = fopen( "test.out", "w" );
+		fputs( video.data[frame][i], fptr );
+		fclose( fptr );
+	}
+	DEFAULT();
 }
 

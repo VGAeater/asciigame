@@ -55,8 +55,9 @@ void resize() {
 }
 
 int main() {
-	FILE* test_file = fopen( "assets/menu.txt", "r" );
-	Image test_image = d_load_image( test_file );
+	FILE* test_file = fopen( "assets/menu.avid", "r" );
+	Video test_video = d_load_video( test_file );
+	float video_start_time = 1;
 	fclose( test_file );
 
 	e_keyboard_handler = &keyboard_handler;
@@ -70,6 +71,8 @@ int main() {
 		if ( resized ) {
 			resize();
 		}
+
+		double delta_time = e_delta();
 		/* draw and stuff */
 		//usleep( 10000 );
 
@@ -85,14 +88,10 @@ int main() {
 		//}
 		//DEFAULT();
 
-		for ( int i = 0; i < test_image.height; i++ ) {
-			MOVE( offset_y + i + 1, offset_x + 1 );
-			fputs( test_image.data[i], stdout );
-		}
-		DEFAULT();
-
-		double delta_time = e_delta();
-
+		int frame = ( int )( ( e_game_time - video_start_time ) * test_video.fps * 2 );
+		if ( frame < 0 ) { frame = 0; }
+		if ( frame >= test_video.frames ) { frame = test_video.frames - 1; }
+		d_draw_video( test_video, offset_y + 1, offset_x + 1, frame );
 		MOVE( t_row, 0 );
 		printf( "%lf", 1 / delta_time );
 

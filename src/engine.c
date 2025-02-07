@@ -46,6 +46,9 @@ double e_delta() {
 	double delta_time = ( double )delta_timespec.tv_sec + ( ( double )delta_timespec.tv_nsec / 1000000000 );
 	last_time = curr_time;
 
+	delta_time *= e_game_speed;
+	e_game_time += delta_time;
+
 	return delta_time;
 }
 
