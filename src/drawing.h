@@ -26,6 +26,8 @@
 #define DL_T "╬"
 
 
+extern int d_offset_x, d_offset_y;
+
 //╒╓╕╖╘╙╛╜╞╟╡╢╤╥╧╨╪╫
 
 typedef struct {

@@ -8,8 +8,10 @@
 #define MAX_BUFFER 4096
 
 
+int d_offset_y, d_offset_x;
+
 void d_hline( int y, int x, char* str, int length ) {
-	MOVE( y, x );
+	MOVE( y + d_offset_y, x + d_offset_x );
 
 	for ( int i = 0; i < length; i++ ) {
 		fputs( str, stdout );
@@ -17,6 +19,9 @@ void d_hline( int y, int x, char* str, int length ) {
 }
 
 void d_vline( int y, int x, char* str, int length ) {
+	y += d_offset_y;
+	x += d_offset_x;
+	
 	for ( int i = 0; i < length; i++ ) {
 		MOVE( y + i, x );
 		fputs( str, stdout );
@@ -24,7 +29,7 @@ void d_vline( int y, int x, char* str, int length ) {
 }
 
 void d_str( int y, int x, char* str ) {
-	MOVE( y, x );
+	MOVE( y + d_offset_y, x + d_offset_x );
 	fputs( str, stdout );
 }
 
@@ -129,6 +134,9 @@ Video d_load_video( FILE* fptr ) {
 }
 
 void d_draw_image( Image image, int y, int x ) {
+	y += d_offset_y;
+	x += d_offset_x;
+
 	for ( int i = 0; i < image.height; i++ ) {
 		MOVE( y + i, x );
 		fputs( image.data[i], stdout );
@@ -137,6 +145,9 @@ void d_draw_image( Image image, int y, int x ) {
 }
 
 void d_draw_video( Video video, int y, int x, int frame ) {
+	y += d_offset_y;
+	x += d_offset_x;
+
 	for ( int i = 0; i < video.height; i++ ) {
 		MOVE( y + i, x );
 		fputs( video.data[frame][i], stdout );
