@@ -34,6 +34,7 @@ void d_str( int y, int x, char* str ) {
 }
 
 void d_rect( int y, int x, int height, int width ) {
+	// dont add offset here because its added in all the other fucntions
 	d_hline( y,              x, DL_H, width );
 	d_hline( y + height - 1, x, DL_H, width );
 	d_vline( y, x,              DL_V, height );
