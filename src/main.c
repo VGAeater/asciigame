@@ -22,6 +22,12 @@
 #define BAR_HEIGHT 32
 #define BAR_WIDTH 30
 
+#define HEALTH_Y 2
+#define HEALTH_X 104
+
+#define WAND_Y 2
+#define WAND_X 118
+
 
 bool running = true;
 bool too_small = false;
@@ -66,9 +72,15 @@ void resize() {
 
 int main() {
 	FILE* test_file = fopen( "assets/menu.avid", "r" );
+	FILE* health_file = fopen( "assets/health.apic", "r" );
+	FILE* wand_file = fopen( "assets/wand.apic", "r" );
 	Video test_video = d_load_video( test_file );
+	Image health_bar = d_load_image( health_file );
+	Image wand_bar = d_load_image( wand_file );
 	float video_start_time = 1;
 	fclose( test_file );
+	fclose( health_file );
+	fclose( wand_file );
 
 	e_keyboard_handler = &keyboard_handler;
 	e_sigwinch_handler = &sigwinch_handler;
@@ -89,7 +101,15 @@ int main() {
 		int frame = ( int )( ( e_game_time - video_start_time ) * test_video.fps * 2 );
 		if ( frame < 0 ) { frame = 0; }
 		if ( frame >= test_video.frames ) { frame = test_video.frames - 1; }
-		d_draw_video( test_video, offset_y + 1, offset_x + 1, frame );
+		d_draw_video( test_video, IMAGE_Y, IMAGE_X, frame );
+		DEFAULT();
+
+		fputs( "\e[31m", stdout );
+		d_draw_image( health_bar, HEALTH_Y, HEALTH_X );
+		fputs( "\e[33m", stdout );
+		d_draw_image( wand_bar, WAND_Y, WAND_X );
+		DEFAULT();
+
 		MOVE( t_row, 0 );
 		printf( "%lf", 1 / delta_time );
 

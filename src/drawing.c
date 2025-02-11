@@ -142,7 +142,6 @@ void d_draw_image( Image image, int y, int x ) {
 		MOVE( y + i, x );
 		fputs( image.data[i], stdout );
 	}
-	DEFAULT();
 }
 
 void d_draw_video( Video video, int y, int x, int frame ) {
@@ -153,6 +152,5 @@ void d_draw_video( Video video, int y, int x, int frame ) {
 		MOVE( y + i, x );
 		fputs( video.data[frame][i], stdout );
 	}
-	DEFAULT();
 }
 
