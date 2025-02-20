@@ -3,6 +3,7 @@
 
 extern double e_game_time;
 extern double e_game_speed;
+extern double e_delta_time;
 
 extern void ( *e_keyboard_handler )( int );
 extern void ( *e_sigwinch_handler )();
@@ -11,6 +12,6 @@ extern void e_init();
 
 extern void e_stop();
 
-extern double e_delta();
+extern void e_run();
 
 #endif

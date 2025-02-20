@@ -14,6 +14,7 @@ void sigwinch_function();
 struct timespec last_time;
 double e_game_time = 0;
 double e_game_speed = 1;
+double e_delta_time = 0;
 
 pthread_t input_thread_id;
 void ( *e_keyboard_handler )( int );
@@ -34,7 +35,7 @@ void e_stop() {
 	t_cleanup();
 }
 
-double e_delta() {
+void e_run() {
 	struct timespec curr_time;
 
 	clock_gettime( CLOCK_MONOTONIC, &curr_time );
@@ -43,13 +44,11 @@ double e_delta() {
 	delta_timespec.tv_sec = curr_time.tv_sec - last_time.tv_sec;
 	delta_timespec.tv_nsec = curr_time.tv_nsec - last_time.tv_nsec;
 
-	double delta_time = ( double )delta_timespec.tv_sec + ( ( double )delta_timespec.tv_nsec / 1000000000 );
+	e_delta_time = ( double )delta_timespec.tv_sec + ( ( double )delta_timespec.tv_nsec / 1000000000 );
 	last_time = curr_time;
 
-	delta_time *= e_game_speed;
-	e_game_time += delta_time;
-
-	return delta_time;
+	e_delta_time *= e_game_speed;
+	e_game_time += e_delta_time;
 }
 
 void* input_thread_function( void* args ) {
