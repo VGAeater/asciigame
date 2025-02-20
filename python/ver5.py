@@ -61,10 +61,10 @@ colors = (
 
 from PIL import Image
 
-#im = Image.open( "amideadyet.webp" )
+im = Image.open( "images/amideadyet.webp" )
 #im = Image.open( "boykisser.png" )
 #im = Image.open( "lol.jpg" )
-im = Image.open( "eye.png" )
+#im = Image.open( "eye.png" )
 
 print( im.format, im.size, im.mode )
 

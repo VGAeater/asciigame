@@ -7,7 +7,7 @@
 #include "global.h"
 
 
-int video_start_time = -1;
+float video_start_time = -1;
 
 Image menu_image;
 Video menu_video;
