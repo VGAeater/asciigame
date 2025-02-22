@@ -15,21 +15,18 @@ int main() {
 
 	g_init();
 
-	Scene curr_scene = menu();
-	curr_scene.init();
+	S_menu();
 
 	while ( g_running ) {
 		e_run();
 		g_run();
-		/* draw and stuff */
-		//usleep( 10000 );
-
-		curr_scene.run();
 
 		MOVE( t_row, 0 );
 		printf( "%lf", 1 / e_delta_time );
 
 		fflush( stdout );
+
+		usleep( 10000 );
 	}
 
 	e_stop();

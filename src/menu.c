@@ -7,23 +7,28 @@
 #include "global.h"
 
 
+#define TEXT_X 75
+#define TEXT_Y 8
+
 float video_start_time = -1;
 
 Image menu_image;
 Video menu_video;
 
-void keyboard_handler( int ch ) {
+void S_menu_keyboard_handler( int ch ) {
 	switch ( ch ) {
 		case 'q':
 			g_running = 0;
 			break;
 		case '\n':
-			video_start_time = e_game_time;
+			if ( video_start_time == -1 ) {
+				video_start_time = e_game_time;
+			}
 			break;
 	}
 }
 
-void init() {
+void S_menu_init() {
 	FILE* menu_image_file = fopen( "assets/menu.apic", "r" );
 	menu_image = d_load_image( menu_image_file );
 	fclose( menu_image_file );
@@ -31,12 +36,15 @@ void init() {
 	menu_video = d_load_video( menu_video_file );
 	fclose( menu_video_file );
 
-	e_keyboard_handler = &keyboard_handler;
+	e_keyboard_handler = &S_menu_keyboard_handler;
 }
 
-void run() {
+void S_menu_run() {
 	if ( video_start_time == -1 ) {
 		d_draw_image( menu_image, IMAGE_Y, IMAGE_X );
+		DEFAULT();
+		d_str( TEXT_Y, TEXT_X, "[Ent] Start" );
+		d_str( TEXT_Y + 2, TEXT_X, "[q] Quit" );
 	} else {
 		int frame = ( int )( ( e_game_time - video_start_time ) * menu_video.fps );
 		if ( frame < 0 ) { frame = 0; }
@@ -46,18 +54,14 @@ void run() {
 	}
 }
 
-void cleanup() {
+void S_menu_cleanup() {
 	d_free_image( menu_image );
 	d_free_video( menu_video );
 }
 
-Scene menu() {
-	Scene scene;
+void S_menu() {
+	S_menu_init();
 
-	scene.init = &init;
-	scene.run = &run;
-	scene.cleanup = &cleanup;
-
-	return scene;
+	g_curr_run = &S_menu_run;
 }
 
