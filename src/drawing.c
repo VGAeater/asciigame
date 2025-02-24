@@ -10,6 +10,18 @@
 
 int d_offset_y, d_offset_x;
 
+int d_clamp_frames( int* frame, int count ) {
+	if ( *frame < 0 ) {
+		*frame = 0;
+		return -1;
+	}
+	if ( *frame >= count ) {
+		*frame = count - 1;
+		return 1;
+	}
+	return 0;
+}
+
 void d_hline( int y, int x, char* str, int length ) {
 	MOVE( y + d_offset_y, x + d_offset_x );
 
@@ -76,7 +88,7 @@ int d_load_frame( FILE* fptr, char** frame, int height ) {
 
 void d_free_frame( char** frame, int height ) {
 	for ( int i = 0; i < height; i++ ) {
-		free( frame );
+		free( frame[i] );
 	}
 	free( frame );
 }

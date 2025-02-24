@@ -16,8 +16,10 @@ double e_game_time = 0;
 double e_game_speed = 1;
 double e_delta_time = 0;
 
+void* e_keyboard_args;
+
 pthread_t input_thread_id;
-void ( *e_keyboard_handler )( int );
+void ( *e_keyboard_handler )( void*, int );
 void ( *e_sigwinch_handler )();
 
 void e_init() {
@@ -56,7 +58,7 @@ void* input_thread_function( void* args ) {
 		int ch = getchar();
 
 		if ( e_keyboard_handler != NULL ) {
-			e_keyboard_handler( ch );
+			e_keyboard_handler( e_keyboard_args, ch );
 		}
 	}
 }

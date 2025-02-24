@@ -61,7 +61,8 @@ colors = (
 
 from PIL import Image
 
-im = Image.open( "images/amideadyet.webp" )
+#im = Image.open( "images/amideadyet.webp" )
+im = Image.open( "images/char.png" )
 #im = Image.open( "images/sneasel.webp" )
 #im = Image.open( "boykisser.png" )
 #im = Image.open( "lol.jpg" )
@@ -126,8 +127,8 @@ def approximate_color( c ):
 
 ratio = 0.5 * ( im.height / im.width )
 
-text_width = 192
-#text_width = 48
+#text_width = 192
+text_width = 32
 
 print( text_width )
 print( math.floor( text_width * ratio ) )

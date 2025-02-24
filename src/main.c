@@ -15,18 +15,25 @@ int main() {
 
 	g_init();
 
-	S_menu();
+	Scene curr_scene = S_menu();
 
 	while ( g_running ) {
+		usleep( 10000 );
+
 		e_run();
 		g_run();
+
+		RunResult result = curr_scene.run( curr_scene );
+
+		if ( result.change ) {
+			curr_scene.cleanup( curr_scene );
+			curr_scene = result.next;
+		}
 
 		MOVE( t_row, 0 );
 		printf( "%lf", 1 / e_delta_time );
 
 		fflush( stdout );
-
-		usleep( 10000 );
 	}
 
 	e_stop();

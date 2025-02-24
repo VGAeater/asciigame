@@ -13,8 +13,6 @@ int g_too_small = 0;
 
 Image health_bar, wand_bar;
 
-void ( *g_curr_run )( void );
-
 void sigwinch_handler() {
 	resized = 1;
 }
@@ -51,6 +49,8 @@ void g_init() {
 	fclose( health_file );
 	fclose( wand_file );
 
+	
+
 	e_sigwinch_handler = &sigwinch_handler;
 
 	resize();
@@ -66,8 +66,6 @@ void g_run() {
 	fputs( "\e[33m", stdout );
 	d_draw_image( wand_bar, WAND_Y, WAND_X );
 	DEFAULT();
-
-	g_curr_run();
 }
 
 void g_cleanup() {

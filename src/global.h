@@ -22,6 +22,20 @@
 #define WAND_Y 2
 #define WAND_X 118
 
+typedef struct Scene Scene;
+typedef struct RunResult RunResult;
+
+struct Scene {
+	RunResult ( *run )( Scene );
+	void ( *cleanup )( Scene );
+	void* state;
+};
+
+struct RunResult {
+	int change;
+	Scene next;
+};
+
 extern volatile int g_running;
 extern int g_too_small;
 extern void ( *g_curr_run )( void );

@@ -44,6 +44,8 @@ typedef struct {
 	char*** data;
 } Video;
 
+int d_clamp_frames( int* frame, int count );
+
 void d_hline( int y, int x, char* str, int length );
 
 void d_vline( int y, int x, char* str, int length );

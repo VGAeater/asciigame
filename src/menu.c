@@ -5,63 +5,88 @@
 #include "engine.h"
 #include "drawing.h"
 #include "global.h"
+#include "menu.h"
+#include "intro.h"
 
 
 #define TEXT_X 75
 #define TEXT_Y 8
 
-float video_start_time = -1;
+void S_menu_keyboard_handler( void* data, int ch );
+RunResult S_menu_run( Scene self );
+void S_menu_cleanup( Scene self );
 
-Image menu_image;
-Video menu_video;
+void S_menu_keyboard_handler( void* data, int ch ) {
+	S_menu_State* state = ( S_menu_State* )data;
 
-void S_menu_keyboard_handler( int ch ) {
 	switch ( ch ) {
 		case 'q':
 			g_running = 0;
 			break;
 		case '\n':
-			if ( video_start_time == -1 ) {
-				video_start_time = e_game_time;
+			if ( state->video_start_time == -1 ) {
+				state->video_start_time = e_game_time;
 			}
 			break;
 	}
 }
 
-void S_menu_init() {
-	FILE* menu_image_file = fopen( "assets/menu.apic", "r" );
-	menu_image = d_load_image( menu_image_file );
-	fclose( menu_image_file );
-	FILE* menu_video_file = fopen( "assets/menu.avid", "r" );
-	menu_video = d_load_video( menu_video_file );
-	fclose( menu_video_file );
+RunResult S_menu_run( Scene self ) {
+	S_menu_State* state = self.state;
 
-	e_keyboard_handler = &S_menu_keyboard_handler;
-}
+	RunResult result;
 
-void S_menu_run() {
-	if ( video_start_time == -1 ) {
-		d_draw_image( menu_image, IMAGE_Y, IMAGE_X );
+	result.change = 0;
+
+	if ( state->video_start_time == -1 ) {
+		d_draw_image( state->menu_image, IMAGE_Y, IMAGE_X );
 		DEFAULT();
 		d_str( TEXT_Y, TEXT_X, "[Ent] Start" );
 		d_str( TEXT_Y + 2, TEXT_X, "[q] Quit" );
 	} else {
-		int frame = ( int )( ( e_game_time - video_start_time ) * menu_video.fps );
-		if ( frame < 0 ) { frame = 0; }
-		if ( frame >= menu_video.frames ) { frame = menu_video.frames - 1; }
-		d_draw_video( menu_video, IMAGE_Y, IMAGE_X, frame );
+		int frame = ( int )( ( e_game_time - state->video_start_time ) * state->menu_video.fps );
+		if ( d_clamp_frames( &frame, state->menu_video.frames ) == 1 ) {
+			result.change = 1;
+			result.next = S_intro();
+		}
+		d_draw_video( state->menu_video, IMAGE_Y, IMAGE_X, frame );
 		DEFAULT();
 	}
+
+	return result;
 }
 
-void S_menu_cleanup() {
-	d_free_image( menu_image );
-	d_free_video( menu_video );
+void S_menu_cleanup( Scene self ) {
+	S_menu_State* state = self.state;
+
+	d_free_image( state->menu_image );
+	d_free_video( state->menu_video );
+
+	free( state );
 }
 
-void S_menu() {
-	S_menu_init();
+Scene S_menu() {
+	Scene self;
 
-	g_curr_run = &S_menu_run;
+	S_menu_State* state = malloc( sizeof( S_menu_State ) );
+	self.state = state;
+
+	FILE* menu_image_file = fopen( "assets/menu.apic", "r" );
+	state->menu_image = d_load_image( menu_image_file );
+	fclose( menu_image_file );
+	FILE* menu_video_file = fopen( "assets/menu.avid", "r" );
+	state->menu_video = d_load_video( menu_video_file );
+	fclose( menu_video_file );
+
+	self.run = &S_menu_run;
+	self.cleanup = &S_menu_cleanup;
+	state->keyboard_handler = &S_menu_keyboard_handler;
+
+	state->video_start_time = -1;
+
+	e_keyboard_handler = state->keyboard_handler;
+	e_keyboard_args = state;
+
+	return self;
 }
 
