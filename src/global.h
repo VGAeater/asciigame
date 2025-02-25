@@ -16,12 +16,6 @@
 #define BAR_HEIGHT 32
 #define BAR_WIDTH 30
 
-#define HEALTH_Y 2
-#define HEALTH_X 104
-
-#define WAND_Y 2
-#define WAND_X 118
-
 typedef struct Scene Scene;
 typedef struct RunResult RunResult;
 
@@ -39,6 +33,8 @@ struct RunResult {
 extern volatile int g_running;
 extern int g_too_small;
 extern void ( *g_curr_run )( void );
+
+void g_keyboard_handler();
 
 void g_init();
 

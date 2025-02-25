@@ -36,6 +36,10 @@ int main() {
 		fflush( stdout );
 	}
 
+	curr_scene.cleanup( curr_scene );
+
+	g_cleanup();
+
 	e_stop();
 
 	if ( g_too_small ) {

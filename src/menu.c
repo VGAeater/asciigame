@@ -17,6 +17,12 @@ RunResult S_menu_run( Scene self );
 void S_menu_cleanup( Scene self );
 
 void S_menu_keyboard_handler( void* data, int ch ) {
+	g_keyboard_handler( ch );
+
+	if ( e_game_paused ) {
+		return;
+	}
+
 	S_menu_State* state = ( S_menu_State* )data;
 
 	switch ( ch ) {
@@ -41,8 +47,8 @@ RunResult S_menu_run( Scene self ) {
 	if ( state->video_start_time == -1 ) {
 		d_draw_image( state->menu_image, IMAGE_Y, IMAGE_X );
 		DEFAULT();
-		d_str( TEXT_Y, TEXT_X, "[Ent] Start" );
-		d_str( TEXT_Y + 2, TEXT_X, "[q] Quit" );
+		d_str( TEXT_Y, TEXT_X, "[ENT] Start" );
+		d_str( TEXT_Y + 2, TEXT_X, "[Q] Quit" );
 	} else {
 		int frame = ( int )( ( e_game_time - state->video_start_time ) * state->menu_video.fps );
 		if ( d_clamp_frames( &frame, state->menu_video.frames ) == 1 ) {

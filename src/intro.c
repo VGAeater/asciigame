@@ -13,6 +13,12 @@ RunResult S_intro_run( Scene self );
 void S_intro_cleanup( Scene self );
 
 void S_intro_keyboard_handler( void* data, int ch ) {
+	g_keyboard_handler( ch );
+
+	if ( e_game_paused ) {
+		return;
+	}
+
 	//switch ( ch ) {
 	//}
 }
@@ -24,7 +30,11 @@ RunResult S_intro_run( Scene self ) {
 
 	output.change = 0;
 
-	
+	FORE_COLOR( WHITE_HIGH );
+	for ( int i = 0; i < 8; i++ ) {
+		d_str( 25+i, 1, "████████████████████████████████████████████████████████████████████████████████████████████████" );
+	}
+	DEFAULT();
 
 	return output;
 }

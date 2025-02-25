@@ -5,7 +5,9 @@ mkdir out
 rm -r out/*
 
 mkdir out/assets
-cp assets/* out/assets/
+mkdir out/data
+cp -r assets/* out/assets/
+cp -r data/* out/data/
 
 cd src
 

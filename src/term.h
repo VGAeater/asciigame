@@ -31,6 +31,9 @@
 #define CYAN_HIGH 14
 #define WHITE_HIGH 15
 
+#define ESC 27
+#define DEL 127
+
 
 extern int t_row, t_col;
 

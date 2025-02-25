@@ -14,6 +14,7 @@ void sigwinch_function();
 struct timespec last_time;
 double e_game_time = 0;
 double e_game_speed = 1;
+int e_game_paused = 0;
 double e_delta_time = 0;
 
 void* e_keyboard_args;
@@ -49,8 +50,9 @@ void e_run() {
 	e_delta_time = ( double )delta_timespec.tv_sec + ( ( double )delta_timespec.tv_nsec / 1000000000 );
 	last_time = curr_time;
 
-	e_delta_time *= e_game_speed;
-	e_game_time += e_delta_time;
+	if ( !e_game_paused ) {
+		e_game_time += e_delta_time * e_game_speed;
+	}
 }
 
 void* input_thread_function( void* args ) {
