@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
+#include <unistd.h>
 #include <time.h>
 
 #include "term.h"
@@ -16,6 +17,7 @@ double e_game_time = 0;
 double e_game_speed = 1;
 int e_game_paused = 0;
 double e_delta_time = 0;
+double e_fps = 120;
 
 void* e_keyboard_args;
 
@@ -50,8 +52,17 @@ void e_run() {
 	e_delta_time = ( double )delta_timespec.tv_sec + ( ( double )delta_timespec.tv_nsec / 1000000000 );
 	last_time = curr_time;
 
+	int time_to_wait = 1000000 / e_fps - ( e_delta_time * 1000000 );
+	if ( time_to_wait > 0 ) {
+		usleep( time_to_wait );
+	}
+
+	e_delta_time *= e_game_speed;
+
 	if ( !e_game_paused ) {
-		e_game_time += e_delta_time * e_game_speed;
+		e_game_time += e_delta_time;
+	} else {
+		e_delta_time = 0;
 	}
 }
 

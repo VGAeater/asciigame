@@ -153,7 +153,7 @@ void g_run() {
 
 	for ( int i = 0; i < NOTE_AMOUNT; i++ ) {
 		if ( i == selected_note ) {
-			fputs( "\e[47;97m", stdout );
+			fputs( "\e[41;97m", stdout );
 		}
 		d_str( NOTES_Y + i, NOTES_X, notes[i] );
 		DEFAULT();

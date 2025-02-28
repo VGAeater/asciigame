@@ -12,6 +12,16 @@
 #define TEXT_X 75
 #define TEXT_Y 8
 
+
+typedef struct S_menu_State S_menu_State;
+
+struct S_menu_State {
+	void ( *keyboard_handler )( void* data, int ch );
+	float video_start_time;
+	Image menu_image;
+	Video menu_video;
+};
+
 void S_menu_keyboard_handler( void* data, int ch );
 RunResult S_menu_run( Scene self );
 void S_menu_cleanup( Scene self );

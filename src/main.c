@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 
 #include "term.h"
 #include "engine.h"
@@ -18,9 +17,8 @@ int main() {
 	Scene curr_scene = S_menu();
 
 	while ( g_running ) {
-		usleep( 10000 );
-
 		e_run();
+
 		g_run();
 
 		RunResult result = curr_scene.run( curr_scene );

@@ -5,6 +5,7 @@ extern double e_game_time;
 extern double e_game_speed;
 extern int e_game_paused;
 extern double e_delta_time;
+extern double e_fps;
 
 extern void* e_keyboard_args;
 
