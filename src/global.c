@@ -51,7 +51,7 @@ void draw_outline() {
 
 	FORE_COLOR( YELLOW_HIGH );
 	if ( e_game_paused ) {
-		d_str( BAR_Y - 1, BAR_X, "╡TAB╞╡Q╞" );
+		d_str( BAR_Y - 1, BAR_X, "╡ESC╞╡TAB╞╡Q╞" );
 	} else {
 		d_str( IMAGE_Y - 1, IMAGE_X, "╡ESC╞" );
 	}

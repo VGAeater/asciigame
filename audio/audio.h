@@ -24,6 +24,4 @@ int a_play_audio( Sound* sound, double start_time );
 
 int a_cleanup();
 
-#define FRAMES_PER_BUFFER 512
-
 #endif

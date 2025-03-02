@@ -9,8 +9,9 @@
 PaStream* stream;
 CallbackIndex callback_list;
 
-#define CHANNELS 7
+#define CHANNELS 2
 #define SAMPLERATE 96000
+#define FRAMES_PER_BUFFER 2048
 
 
 int callback( const void* input, void* output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData );
