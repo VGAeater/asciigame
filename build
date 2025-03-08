@@ -11,4 +11,4 @@ cp -r data/* out/data/
 
 cd src
 
-gcc -o ../out/run *.c
+gcc -o ../out/run -Wall *.c

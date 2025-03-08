@@ -6,7 +6,6 @@
 #include "drawing.h"
 #include "global.h"
 #include "fight1.h"
-
 #include "intro.h"
 
 
@@ -33,6 +32,9 @@ void S_intro_keyboard_handler( void* data, int ch ) {
 	if ( ch == '\n' ) {
 		state->done = 1;
 	}
+
+	//switch ( ch ) {
+	//}
 }
 
 RunResult S_intro_run( Scene self ) {

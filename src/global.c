@@ -30,6 +30,12 @@ int g_typing = 0;
 char notes[NOTE_AMOUNT][NOTE_LENGTH + 1];
 int selected_note = -1;
 
+double g_health = 100;
+double g_wand_health = 100;
+
+double g_damage_multiplier = 1;
+double g_wand_penalty = 5;
+
 Image health_bar, wand_bar;
 
 void sigwinch_handler() {
@@ -131,6 +137,8 @@ void g_init() {
 		notes[i][j] = '\0';
 	}
 
+	fclose( notes_file );
+
 	e_sigwinch_handler = &sigwinch_handler;
 
 	resize();
@@ -163,5 +171,12 @@ void g_run() {
 void g_cleanup() {
 	d_free_image( health_bar );
 	d_free_image( wand_bar );
+
+	FILE* notes_file = fopen( "data/notes.txt", "w" );
+
+	for ( int i = 0; i < NOTE_AMOUNT; i++ ) {
+		fputs( notes[i], notes_file );
+		putc( '\n', notes_file );
+	}
 }
 

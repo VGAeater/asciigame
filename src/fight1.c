@@ -5,6 +5,7 @@
 #include "engine.h"
 #include "drawing.h"
 #include "global.h"
+#include "spells.h"
 
 #include "fight1.h"
 
@@ -27,14 +28,22 @@ void S_fight1_keyboard_handler( void* data, int ch ) {
 	if ( e_game_paused ) {
 		return;
 	}
+
+	s_keyboard_handler( ch );
 }
 
 RunResult S_fight1_run( Scene self ) {
 	S_fight1_State* state = self.state;
 
 	RunResult output;
-
 	output.change = 0;
+
+	s_run();
+
+	ActiveSpell* spell_tracker = active_spells;
+	while ( spell_tracker ) {
+		spell_tracker = spell_tracker->next;
+	}
 
 	return output;
 }

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "spells.h"
 #include "term.h"
 #include "engine.h"
 #include "drawing.h"
@@ -13,6 +14,8 @@ int main() {
 	e_init();
 
 	g_init();
+
+	s_init();
 
 	Scene curr_scene = S_menu();
 
@@ -35,6 +38,8 @@ int main() {
 	}
 
 	curr_scene.cleanup( curr_scene );
+
+	s_cleanup();
 
 	g_cleanup();
 

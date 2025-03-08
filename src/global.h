@@ -30,11 +30,17 @@ struct RunResult {
 	Scene next;
 };
 
+extern double g_health;
+extern double g_wand_health;
+
+extern double g_damage_multiplier;
+extern double g_wand_penalty;
+
 extern volatile int g_running;
 extern int g_too_small;
 extern void ( *g_curr_run )( void );
 
-void g_keyboard_handler();
+void g_keyboard_handler( int ch );
 
 void g_init();
 
