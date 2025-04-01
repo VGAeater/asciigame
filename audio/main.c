@@ -1,5 +1,5 @@
-#include <portaudio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "audio.h"
 
@@ -8,12 +8,12 @@ int main() {
 
 	a_init();
 
-	a_load_audio( "audio2.wav", &sound );
+	a_load_audio( "audio.wav", &sound );
 
 	a_play_audio( &sound, 0 );
 
 	while ( 1 ) {
-		Pa_Sleep(100);
+		usleep(1000);
 	}
 
 	a_cleanup();

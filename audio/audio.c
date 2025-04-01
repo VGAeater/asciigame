@@ -7,7 +7,7 @@
 #include "audio.h"
 
 PaStream* stream;
-CallbackIndex callback_list;
+CallbackIndex* callback_list;
 
 #define CHANNELS 2
 #define SAMPLERATE 96000
@@ -25,7 +25,7 @@ int a_init() {
 		return 1;
 	}
 
-	error = Pa_OpenDefaultStream( &stream, 0, CHANNELS, paFloat32, SAMPLERATE, FRAMES_PER_BUFFER, callback, &callback_list );
+	error = Pa_OpenDefaultStream( &stream, 0, CHANNELS, paFloat32, SAMPLERATE, FRAMES_PER_BUFFER, callback, NULL );
 	if ( error != paNoError ) {
 		fputs( "Problem opening Default Stream\n", stderr );
 		return 1;
@@ -41,17 +41,13 @@ int a_init() {
 }
 
 int callback( const void* input, void* output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData ) {
-	CallbackIndex* callback_list = ( CallbackIndex* )userData;
-
 	float* out = ( float* )output;
 
 	memset( out, 0, sizeof( float ) * frameCount * CHANNELS );
 
 	CallbackIndex* curr_element = callback_list;
 
-	while ( curr_element->next != NULL ) {
-		curr_element = curr_element->next;
-
+	while ( curr_element ) {
 		for ( unsigned long i = 0; i < frameCount; i++ ) {
 			PaTime frame_time = timeInfo->outputBufferDacTime - curr_element->start_time + ( double )i / SAMPLERATE;
 			unsigned long frame_index = ( unsigned long )( frame_time * ( double )curr_element->sound->info.samplerate ) * curr_element->sound->info.channels;
@@ -59,6 +55,7 @@ int callback( const void* input, void* output, unsigned long frameCount, const P
 				out[i * CHANNELS + c] += curr_element->sound->data[frame_index + ( unsigned long )( ( double )c / CHANNELS * ( double )curr_element->sound->info.channels )];
 			}
 		}
+		curr_element = curr_element->next;
 	}
 
 	// return paComplete;
@@ -67,20 +64,15 @@ int callback( const void* input, void* output, unsigned long frameCount, const P
 }
 
 int a_play_audio( Sound* sound, double start_time ) {
-	CallbackIndex* curr_element = &callback_list;
+	CallbackIndex* new_element = malloc( sizeof( CallbackIndex ) );
 
-	while ( curr_element->next != NULL ) {
-		curr_element = curr_element->next;
-	}
+	new_element->start_time = start_time + Pa_GetStreamTime( stream );
 
-	curr_element->next = malloc( sizeof( CallbackIndex ) );
-	curr_element = curr_element->next;
+	new_element->sound = sound;
 
-	curr_element->start_time = start_time + Pa_GetStreamTime( stream );
+	new_element->next = callback_list;
 
-	curr_element->sound = sound;
-
-	curr_element->next = NULL;
+	callback_list = new_element;
 
 	return 0;
 }
